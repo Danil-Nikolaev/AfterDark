@@ -1,0 +1,53 @@
+package com.nikolaev.AfterDarkAPI.services;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.nikolaev.AfterDarkAPI.models.Wax;
+import com.nikolaev.AfterDarkAPI.repositories.WaxRepository;
+
+@Service
+public class WaxService {
+    private WaxRepository waxRepository;
+
+    public WaxService(@Autowired WaxRepository waxRepository) {
+        this.waxRepository = waxRepository;
+    }
+
+    public List<Wax> index() {
+        ArrayList<Wax> result = new ArrayList<>();
+        Iterable<Wax> source = waxRepository.findAll();
+        source.forEach(result::add);
+        return result;
+    }
+
+    public Wax show(long id) {
+        return waxRepository.findById(id).orElse(null);
+    }
+
+    public Wax save(Wax wax) {
+        waxRepository.save(wax);
+        return wax;
+    }
+
+    public Wax update(Wax wax, long id) {
+        Optional<Wax> optionalWax = waxRepository.findById(id);
+        if (optionalWax.isPresent()) {
+            Wax existingWax = optionalWax.get();
+            existingWax.setName(wax.getName());
+            existingWax.setDescription(wax.getDescription());
+            existingWax.setPrice(wax.getPrice());
+            existingWax.setQuanity(wax.getQuanity());
+            return waxRepository.save(existingWax);
+        }
+        return null;
+    }
+
+    public void delete(long id) {
+        waxRepository.deleteById(id);
+    }
+}
