@@ -2,6 +2,7 @@ package com.nikolaev.AfterDarkAPI.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +21,7 @@ public class SmellController {
 
     private SmellService smellService;
 
-    public SmellController(SmellService smellService) {
+    public SmellController(@Autowired SmellService smellService) {
         this.smellService = smellService;
     }
 

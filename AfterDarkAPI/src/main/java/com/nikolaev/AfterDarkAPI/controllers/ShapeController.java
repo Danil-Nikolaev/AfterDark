@@ -2,6 +2,7 @@ package com.nikolaev.AfterDarkAPI.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +21,7 @@ public class ShapeController {
 
     private ShapeService shapeService;
 
-    public ShapeController(ShapeService shapeService) {
+    public ShapeController(@Autowired ShapeService shapeService) {
         this.shapeService = shapeService;
     }
 
