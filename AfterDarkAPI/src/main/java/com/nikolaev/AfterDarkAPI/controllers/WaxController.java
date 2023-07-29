@@ -30,7 +30,7 @@ public class WaxController {
         return waxService.index();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Wax show(@PathVariable("id") long id) {
         return waxService.show(id);
     }
