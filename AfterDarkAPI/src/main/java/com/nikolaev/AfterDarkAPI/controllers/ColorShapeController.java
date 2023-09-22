@@ -16,7 +16,7 @@ import com.nikolaev.AfterDarkAPI.models.ColorShape;
 import com.nikolaev.AfterDarkAPI.services.ColorShapeService;
 
 @RestController
-@RequestMapping("api/afterdark/colorrshape")
+@RequestMapping("api/afterdark/colorshape")
 public class ColorShapeController {
 
     private ColorShapeService colorShapeService;
