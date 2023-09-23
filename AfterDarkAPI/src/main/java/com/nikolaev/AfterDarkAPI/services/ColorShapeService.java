@@ -7,16 +7,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nikolaev.AfterDarkAPI.models.Candle;
 import com.nikolaev.AfterDarkAPI.models.ColorShape;
+import com.nikolaev.AfterDarkAPI.repositories.CandleRepository;
 import com.nikolaev.AfterDarkAPI.repositories.ColorShapeRepository;
 
 @Service
 public class ColorShapeService {
 
     private ColorShapeRepository colorShapeRepository;
+    private CandleRepository candleRepository;
 
-    public ColorShapeService(@Autowired ColorShapeRepository colorShapeRepository) {
+    public ColorShapeService(@Autowired ColorShapeRepository colorShapeRepository, @Autowired CandleRepository candleRepository) {
         this.colorShapeRepository = colorShapeRepository;
+        this.candleRepository = candleRepository;
     }
 
     public List<ColorShape> index() {
@@ -47,6 +51,11 @@ public class ColorShapeService {
     }
 
     public void delete(long id) {
+        List<Candle> candles = candleRepository.findAllByColorShapeId(id);
+        for (Candle candle : candles) {
+            candle.setColorShape(null);
+            candleRepository.save(candle);
+        }
         colorShapeRepository.deleteById(id);
     }
 }

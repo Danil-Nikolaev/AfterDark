@@ -7,16 +7,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nikolaev.AfterDarkAPI.models.Candle;
 import com.nikolaev.AfterDarkAPI.models.Wick;
+import com.nikolaev.AfterDarkAPI.repositories.CandleRepository;
 import com.nikolaev.AfterDarkAPI.repositories.WickRepository;
 
 @Service
 public class WickService {
 
     private WickRepository wickRepository;
+    private CandleRepository candleRepository;
 
-    public WickService(@Autowired WickRepository wickRepository) {
+    public WickService(@Autowired WickRepository wickRepository, @Autowired CandleRepository candleRepository) {
         this.wickRepository = wickRepository;
+        this.candleRepository = candleRepository;
     }
 
     public List<Wick> index() {
@@ -49,6 +53,11 @@ public class WickService {
     }
 
     public void delete(long id) {
+        List<Candle> candles = candleRepository.findAllByWickId(id);
+        for (Candle candle : candles) {
+            candle.setWick(null);
+            candleRepository.save(candle);
+        }
         wickRepository.deleteById(id);
     }
 

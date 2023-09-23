@@ -7,16 +7,20 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nikolaev.AfterDarkAPI.models.Candle;
 import com.nikolaev.AfterDarkAPI.models.Shape;
+import com.nikolaev.AfterDarkAPI.repositories.CandleRepository;
 import com.nikolaev.AfterDarkAPI.repositories.ShapeRepository;
 
 @Service
 public class ShapeService {
 
     private ShapeRepository shapeRepository;
+    private CandleRepository candleRepository;
 
-    public ShapeService(@Autowired ShapeRepository shapeRepository) {
+    public ShapeService(@Autowired ShapeRepository shapeRepository, @Autowired CandleRepository candleRepository) {
         this.shapeRepository = shapeRepository;
+        this.candleRepository = candleRepository;
     }
 
     public List<Shape> index() {
@@ -49,6 +53,11 @@ public class ShapeService {
     }
 
     public void delete(long id) {
+        List<Candle> candles = candleRepository.findAllByShapeId(id);
+        for (Candle candle : candles) {
+            candle.setShape(null);
+            candleRepository.save(candle);
+        }
         shapeRepository.deleteById(id);
     }
 }

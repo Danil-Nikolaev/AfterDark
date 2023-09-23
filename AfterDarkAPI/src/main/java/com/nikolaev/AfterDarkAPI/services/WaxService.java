@@ -7,15 +7,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nikolaev.AfterDarkAPI.models.Candle;
 import com.nikolaev.AfterDarkAPI.models.Wax;
+import com.nikolaev.AfterDarkAPI.repositories.CandleRepository;
 import com.nikolaev.AfterDarkAPI.repositories.WaxRepository;
 
 @Service
 public class WaxService {
     private WaxRepository waxRepository;
+    private CandleRepository candleRepository;
 
-    public WaxService(@Autowired WaxRepository waxRepository) {
+    public WaxService(@Autowired WaxRepository waxRepository, @Autowired CandleRepository candleRepository) {
         this.waxRepository = waxRepository;
+        this.candleRepository = candleRepository;
     }
 
     public List<Wax> index() {
@@ -48,6 +52,11 @@ public class WaxService {
     }
 
     public void delete(long id) {
+        List<Candle> candles = candleRepository.findAllByWaxId(id);
+        for (Candle candle : candles) {
+            candle.setWax(null);
+            candleRepository.save(candle);
+        }
         waxRepository.deleteById(id);
     }
 }
