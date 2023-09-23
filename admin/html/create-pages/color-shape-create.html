@@ -12,8 +12,8 @@
     </script>
   <!-- Подключение jQuery из CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../js/smell-script.js"></script>
-  <link rel="stylesheet" href="../css/style.css">
+  <script src="../js/wax-script.js"></script>
+  <link rel="stylesheet" href="../../css/style.css">
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -31,31 +31,31 @@
           <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
             <li>
               <a href="#" class="nav-link text-secondary">
-                <img src="../icons/main-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
+                <img src="../../icons/main-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
                 Главная
               </a>
             </li>
             <li>
               <a href="#" class="nav-link text-white">
-                <img src="../icons/speed-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
+                <img src="../../icons/speed-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
                 Панель
               </a>
             </li>
             <li>
               <a href="#" class="nav-link text-white">
-                <img src="../icons/order-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
+                <img src="../../icons/order-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
                 Заказы
               </a>
             </li>
             <li>
               <a href="#" class="nav-link text-white">
-                <img src="../icons/product-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
+                <img src="../../icons/product-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
                 Продукты
               </a>
             </li>
             <li>
               <a href="#" class="nav-link text-white">
-                <img src="../icons/client-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
+                <img src="../../icons/client-icon.png" class="bi d-block mx-auto mb-1" alt="" width="24" height="24">
                 Клиенты
               </a>
             </li>
@@ -64,46 +64,35 @@
       </div>
     </div>
   </header>
+
+
   <main class="main">
     <div class="container">
-      <div class="row">
-        <div class="col-xxl-4 col-sm-12 right-panel">
-          <div class="h-40 p-5 text-white bg-dark rounded-3 square">
-            <form action="">
-              <div class="mb-3 row">
-                <h3 class="text-white">Поиск</h3>
-                <input type="text" class="form-control" id="search" aria-describedby="emailHelp">
-              </div>
-              <div class="row">
-                <button type="submit" class="btn btn-outline-light ">Поиск</button>
+      <div class="row g-5">
+        <div class="col-md-7 col-lg-8">
+          <h4 class="mb-3">Создание нового аромата</h4>
+          <form class="needs-validation" novalidate="">
+            <div class="row g-3">
+              <div class="col-sm-12">
+                <label for="name" class="form-label">Название</label>
+                <input type="text" class="form-control" id="name" placeholder="" value="" required="">
               </div>
 
-            </form>
-            <div class="row footer-in-search">
-              <a href="create-pages/smell-create.html"  class="btn btn-outline-light create-under-search">Создать</a>
-              <a href="index.html" class="btn btn-outline-light create-under-search">Назад</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-xxl-1"></div>
-        <div class="col-xxl-7 col-sm-12">
-          <h1>Ароматы</h1>
-          <table class="table table-index">
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Название</th>
-                <th scope="col">Описание</th>
-                <th scope="col">Количество</th>
-                <th scope="col">Стоимость</th>
-                <th scope="col">Редактировать</th>
-                <th scope="col">Удалить</th>
-              </tr>
-            </thead>
-            <tbody class="table-group-divider" id="table-smell">
+              <div class="col-sm-12">
+                <label for="description" class="form-label">Описание</label>
+                <input type="text" class="form-control" id="description" placeholder="" value="" required="">
+              </div>
 
-            </tbody>
-          </table>
+              <div class="col-sm-12">
+                <label for="price" class="form-label">Цена</label>
+                <input type="text" class="form-control" id="price">
+              </div>
+
+              <hr class="my-4">
+
+              <button class="w-100 btn btn-outline-primary btn-lg" type="submit">Создать</button>
+          </form>
+          <a href="../color-shape.html" class="w-100 btn btn-outline-dark btn-lg" type="submit">Назад</a>
         </div>
       </div>
     </div>
