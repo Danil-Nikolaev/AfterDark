@@ -1,4 +1,5 @@
 urlApi = "http://localhost:8080/api/afterdark/colorshape";
+currentUrl = 'http://127.0.0.1:5500/admin/html/color-shape.html';
 
 $(document).ready(function() {
     console.log("Work");
@@ -13,8 +14,27 @@ function load_table() {
             cell2 = $('<td>').text(item.name);
             cell3 = $('<td>').text(item.description);
             cell4 = $('<td>').text(item.price);
-
-            newRow.append(cell1, cell2, cell3, cell4);
+            cell5 = $('<td>').append($('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Редактировать'));
+            a = $('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Удалить')
+            cell6 = $('<td>').append(a);
+            a.on('click', function(event) {
+                event.preventDefault(); // Предотвращаем переход по ссылке
+                var clickedLink = event.target.href; 
+                $.ajax({
+                    url: clickedLink, // Замените на URL вашего API-ресурса
+                    type: 'delete',
+                    success: function(result) {
+                        // Обработка успешного выполнения запроса DELETE
+                        window.location.href = currentUrl;
+                        console.log('DELETE-запрос выполнен успешно');
+                    },
+                    error: function(xhr, status, error) {
+                        // Обработка ошибок при выполнении запроса DELETE
+                        console.error('Произошла ошибка при выполнении DELETE-запроса:', error);
+                    }
+                })
+            });
+            newRow.append(cell1, cell2, cell3, cell4, cell5, cell6);
             $('#table-color-shape').append(newRow);
         });
     })
