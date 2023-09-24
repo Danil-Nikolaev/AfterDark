@@ -12,6 +12,10 @@ function deleteRow(event) {
 
 function load_table() {
     $.get(urlApi, function(data){
+        data.sort(function(a, b) {
+            return a.id - b.id;
+        });
+
         data.forEach(item => {
             newRow = $('<tr>');
             cell1 = $('<td>').text(item.id);
@@ -19,10 +23,18 @@ function load_table() {
             cell3 = $('<td>').text(item.description);
             cell4 = $('<td>').text(item.quanity);
             cell5 = $('<td>').text(item.price);
-            cell6 = $('<td>').append($('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Редактировать'));
-            a = $('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Удалить')
-            cell7 = $('<td>').append(a);
-            a.on('click', function(event) {
+            updateCol = $('<a>').addClass("btn btn-dark btn-sm").attr('value', `${item.id}`).text('Редактировать');
+            cell6 = $('<td>').append(updateCol);
+            deleteCol = $('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Удалить')
+            cell7 = $('<td>').append(deleteCol);
+
+            updateCol.on('click', function(event){
+                event.preventDefault();
+                id = $(this).attr('value')
+                window.location.href = 'http://127.0.0.1:5500/admin/html/update-pages/wick-update.html' + `?id=${id}`;
+            });
+
+            deleteCol.on('click', function(event) {
                 event.preventDefault(); // Предотвращаем переход по ссылке
                 var clickedLink = event.target.href; 
                 $.ajax({

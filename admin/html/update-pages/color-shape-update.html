@@ -12,7 +12,7 @@
     </script>
   <!-- Подключение jQuery из CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../../js/create-scripts/smell-create-script.js"></script>
+  <script src="../../js/update-scripts/color-shape-update-script.js"></script>
   <link rel="stylesheet" href="../../css/style.css">
 </head>
 
@@ -70,8 +70,8 @@
     <div class="container">
       <div class="row g-5">
         <div class="col-md-7 col-lg-8">
-          <h4 class="mb-3">Создание нового аромата</h4>
-          <form action="http://localhost:8080/api/afterdark/smell" method="post" id="my-form" class="needs-validation" novalidate="">
+          <h4 class="mb-3">Обновить</h4>
+          <form method="put" id="my-form-update" class="needs-validation" novalidate="">
             <div class="row g-3">
               <div class="col-sm-12">
                 <label for="name" class="form-label">Название</label>
@@ -83,21 +83,16 @@
                 <input name="description" type="text" class="form-control" id="description" placeholder="" value="" required="">
               </div>
 
-              <div class="col-sm-6">
-                <label for="quanity" class="form-label">Количество</label>
-                <input name="quanity" type="text" class="form-control" id="quanity" required="">
-              </div>
-
-              <div class="col-sm-6">
+              <div class="col-sm-12">
                 <label for="price" class="form-label">Цена</label>
                 <input name="price" type="text" class="form-control" id="price">
               </div>
 
               <hr class="my-4">
 
-              <button class="w-100 btn btn-outline-primary btn-lg" type="submit">Создать</button>
+              <button class="w-100 btn btn-outline-primary btn-lg" type="submit">Обновить</button>
           </form>
-          <a href="../smell.html" class="w-100 btn btn-outline-dark btn-lg" type="submit">Назад</a>
+          <a href="../color-shape.html" class="w-100 btn btn-outline-dark btn-lg" type="submit">Назад</a>
         </div>
       </div>
     </div>

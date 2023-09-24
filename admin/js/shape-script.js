@@ -8,6 +8,10 @@ $(document).ready(function() {
 
 function load_table() {
     $.get(urlApi, function(data){
+        data.sort(function(a, b) {
+            return a.id - b.id;
+        });
+
         data.forEach(item => {
             newRow = $('<tr>');
             cell1 = $('<td>').text(item.id);
@@ -16,9 +20,17 @@ function load_table() {
             cell4 = $('<td>').text(item.volume);
             cell5 = $('<td>').text(item.quanity);
             cell6 = $('<td>').text(item.price);
-            cell7 = $('<td>').append($('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Редактировать'));
+            updateCol = $('<a>').addClass("btn btn-dark btn-sm").attr('value', `${item.id}`).text('Редактировать');
+            cell7 = $('<td>').append(updateCol);
             a = $('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Удалить')
             cell8 = $('<td>').append(a);
+
+            updateCol.on('click', function(event){
+                event.preventDefault();
+                id = $(this).attr('value')
+                window.location.href = 'http://127.0.0.1:5500/admin/html/update-pages/shape-update.html' + `?id=${id}`;
+            });
+
             a.on('click', function(event) {
                 event.preventDefault(); // Предотвращаем переход по ссылке
                 var clickedLink = event.target.href; 

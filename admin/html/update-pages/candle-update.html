@@ -9,10 +9,10 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+  </script>
   <!-- Подключение jQuery из CDN -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="../../js/create-scripts/smell-create-script.js"></script>
+  <script src="../../js/update-scripts/candle-update-script.js"></script>
   <link rel="stylesheet" href="../../css/style.css">
 </head>
 
@@ -70,8 +70,8 @@
     <div class="container">
       <div class="row g-5">
         <div class="col-md-7 col-lg-8">
-          <h4 class="mb-3">Создание нового аромата</h4>
-          <form action="http://localhost:8080/api/afterdark/smell" method="post" id="my-form" class="needs-validation" novalidate="">
+          <h4 class="mb-3">Обновить</h4>
+          <form id="my-form-update" method="put" class="needs-validation" novalidate="">
             <div class="row g-3">
               <div class="col-sm-12">
                 <label for="name" class="form-label">Название</label>
@@ -93,11 +93,48 @@
                 <input name="price" type="text" class="form-control" id="price">
               </div>
 
+              <div class="col-sm-6">
+                <select id="custom" name="custom" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option value="true" selected >Кастомная</option>
+                    <option value="false">Стандартная</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <select id="color-shape" name="colorShape" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option disabled="true" selected>Цветы формы</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <select id="smell" name="smell" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option disabled="true" selected>Ароматы</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <select id="wax" name="wax" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option disabled="true" selected>Воск</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <select id="wick" name="wick" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option disabled="true" selected>Фитили</option>
+                </select>
+              </div>
+
+              <div class="col-sm-6">
+                <select id="shape" name="shape" class="form-select form-select-sm my-select" aria-label=".form-select-sm пример">
+                    <option disabled="true" selected>Формы</option>
+                </select>
+              </div>
+
               <hr class="my-4">
 
-              <button class="w-100 btn btn-outline-primary btn-lg" type="submit">Создать</button>
+              <button class="w-100 btn btn-outline-primary btn-lg" type="submit">Обновить</button>
           </form>
-          <a href="../smell.html" class="w-100 btn btn-outline-dark btn-lg" type="submit">Назад</a>
+          <a href="../candle.html" class="w-100 btn btn-outline-dark btn-lg" type="submit">Назад</a>
         </div>
       </div>
     </div>

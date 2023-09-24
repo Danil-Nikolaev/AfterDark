@@ -50,9 +50,17 @@ function load_table() {
                 cell11 = $('<td>').text(item.shape.name);
             }
 
-            cell12 = $('<td>').append($('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Редактировать'));
+            updateCol = $('<a>').addClass("btn btn-dark btn-sm").attr('value', `${item.id}`).text('Редактировать');
+            cell12 = $('<td>').append(updateCol);
             a = $('<a>').addClass("btn btn-dark btn-sm").attr('href',urlApi + `/${item.id}`).text('Удалить')
             cell13 = $('<td>').append(a);
+
+            updateCol.on('click', function(event){
+                event.preventDefault();
+                id = $(this).attr('value')
+                window.location.href = 'http://127.0.0.1:5500/admin/html/update-pages/candle-update.html' + `?id=${id}`;
+            });
+
             a.on('click', function(event) {
                 event.preventDefault(); // Предотвращаем переход по ссылке
                 var clickedLink = event.target.href; 
