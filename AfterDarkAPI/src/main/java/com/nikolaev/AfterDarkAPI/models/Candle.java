@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,23 +39,23 @@ public class Candle {
     private int price;
     private boolean custom;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "color_shape_id")
     private ColorShape colorShape;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "smell_id")
     private Smell smell;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "wax_id")
     private Wax wax;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "wick_id")
     private Wick wick;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "shape_id")
     private Shape shape;
 

@@ -45,7 +45,7 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-       for (int i = 0; i < 100; i++) {
+       for (int i = 1; i < 100; i++) {
 
             Wick wick = new Wick((long) i, "Wick " + i, "Description " + i, 10 + i, 5 + i);
             wickRepository.save(wick);

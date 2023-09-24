@@ -42,6 +42,12 @@ public class CandleService {
             existingCandle.setDescription(candle.getDescription());
             existingCandle.setPrice(candle.getPrice());
             existingCandle.setQuanity(candle.getQuanity());
+            existingCandle.setColorShape(candle.getColorShape());
+            existingCandle.setCustom(candle.isCustom());
+            existingCandle.setShape(candle.getShape());
+            existingCandle.setSmell(candle.getSmell());
+            existingCandle.setWax(candle.getWax());
+            existingCandle.setWick(candle.getWick());
             return candleRepository.save(existingCandle);
         }
         return null;
