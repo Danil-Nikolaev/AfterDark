@@ -10,8 +10,8 @@ import com.nikolaev.AfterDarkAPI.enummuration.StageOfWork;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,7 +32,7 @@ public class Order {
     private String dateOfDelivery;
     private int price;
 
-    @OneToMany
+    @ManyToMany
     private List<Candle> candles;
 
     @ManyToOne

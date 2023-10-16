@@ -5,7 +5,7 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -20,7 +20,7 @@ public class Basket {
     @OneToOne
     private User user;
 
-    @OneToMany
+    @ManyToMany
     private List<Candle> candles;
 
     public Basket(long id, User user, List<Candle> candles) {
