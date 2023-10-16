@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,7 +42,7 @@ public class BasketController {
     }
 
     @PutMapping("{id}")
-    public Basket update(@ModelAttribute("basket") Basket basket, @PathVariable("id") long id) {
+    public Basket update(@RequestBody Basket basket, @PathVariable("id") long id) {
         return basketService.update(basket, id);
     }
 
