@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -35,8 +36,22 @@ public class UserController {
         return userService.show(id);
     }
 
+    @GetMapping("find")
+    public boolean findByLogin(String login) {
+        User user = userService.findByLogin(login);
+        if (user == null) return false;
+        return true;
+    }
+
+    @GetMapping("findUser")
+    public User findUserByLogin(String login) {
+        User user = userService.findByLogin(login);
+        return user;
+    }
+
     @PostMapping
-    public User create(@ModelAttribute("user") User user) {
+    public User create(@RequestBody User user) {
+        System.out.println(user.getLogin());
         return userService.save(user);
     }
 
