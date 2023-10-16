@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.nikolaev.AfterDarkAPI.models.Basket;
 import com.nikolaev.AfterDarkAPI.models.User;
 import com.nikolaev.AfterDarkAPI.repositories.UserRepository;
 
@@ -14,9 +15,11 @@ import com.nikolaev.AfterDarkAPI.repositories.UserRepository;
 public class UserService {
 
     private UserRepository userRepository;
+    private BasketService basketService;
 
-    public UserService(@Autowired UserRepository userRepository) {
+    public UserService(@Autowired UserRepository userRepository, @Autowired BasketService basketService) {
         this.userRepository = userRepository;
+        this.basketService = basketService;
     }
 
     public List<User> index() {
@@ -31,7 +34,12 @@ public class UserService {
     }
 
     public User save(User user) {
-        return userRepository.save(user);
+        Basket basket = new Basket();
+        basket.setUser(user);
+        basket.setCandles(null);
+        user = userRepository.save(user);
+        basketService.save(basket);
+        return user;
     }
 
     public User update(User user, long id) {
@@ -49,5 +57,11 @@ public class UserService {
 
     public void delete(long id) {
         userRepository.deleteById(id);
+    }
+
+    public User findByLogin(String login) {
+       Optional<User> user = userRepository.findByLogin(login);
+        if (user.isPresent()) return user.get();
+        return null;
     }
 }
