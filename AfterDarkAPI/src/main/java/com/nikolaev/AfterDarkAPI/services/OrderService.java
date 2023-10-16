@@ -8,19 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nikolaev.AfterDarkAPI.models.Order;
-import com.nikolaev.AfterDarkAPI.models.User;
 import com.nikolaev.AfterDarkAPI.repositories.OrderRepository;
-import com.nikolaev.AfterDarkAPI.repositories.UserRepository;
 
 @Service
 public class OrderService {
 
     private OrderRepository orderRepository;
-    private UserRepository userRepository;
 
-    public OrderService(@Autowired OrderRepository orderRepository, @Autowired UserRepository userRepository) {
+    public OrderService(@Autowired OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
     }
 
     public List<Order> index() {
