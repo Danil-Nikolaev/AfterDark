@@ -59,6 +59,28 @@ public class Candle {
     @JoinColumn(name = "shape_id")
     private Shape shape;
 
+    @Override
+    public boolean equals(Object obj) {
+        Candle candle = (Candle) obj;
+
+        long smellId = candle.getSmell().getId();
+        long shapeId = candle.getShape().getId();
+        long colorShapeId = candle.getColorShape().getId();
+        long wickId = candle.getWick().getId();
+
+        long thisSmellId = this.getSmell().getId();
+        long thisShapeId = this.getShape().getId();
+        long thisColorShapeId = this.getColorShape().getId();
+        long thisWickId = this.getWick().getId();
+
+        if (thisSmellId == smellId && thisShapeId == shapeId && thisColorShapeId == colorShapeId
+                && thisWickId == wickId) {
+                    return true;
+        }
+
+        return false;
+    }
+
     public long getId() {
         return id;
     }
