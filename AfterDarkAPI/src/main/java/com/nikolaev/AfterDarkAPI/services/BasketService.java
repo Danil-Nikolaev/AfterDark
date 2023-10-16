@@ -39,7 +39,6 @@ public class BasketService {
         Optional<Basket> optionalBasket = basketRepository.findById(id);
         if (optionalBasket.isPresent()) {
             Basket existingBasket = optionalBasket.get();
-            existingBasket.setUser(basket.getUser());
             existingBasket.setCandles(basket.getCandles());
             return basketRepository.save(existingBasket);
         }
