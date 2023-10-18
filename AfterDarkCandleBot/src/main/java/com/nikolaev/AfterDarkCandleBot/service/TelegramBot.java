@@ -217,7 +217,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void startMessage(long chatId, String name) {
-        this.botStateMap = null;
+        this.botStateMap.put(chatId, null);
         SendMessage message = this.message.startMessage(chatId, name);
         sendMessage(message);
     }
