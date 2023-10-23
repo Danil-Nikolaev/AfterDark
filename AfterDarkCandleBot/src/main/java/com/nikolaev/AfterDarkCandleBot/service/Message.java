@@ -48,7 +48,7 @@ public class Message {
         ArrayNode orders = this.afterDarkAPI.getAllOrdersByUser(chatId);
         if (orders.isEmpty()) {
             result = new ArrayList<>();
-            result.add(setMessage(chatId, "Пока что у вас нет никаких заказов."));
+            result.add(setMessage(chatId, "На данный момент у Вас нет заказов"));
             return result;
         } 
         result = new ArrayList<>();
@@ -71,7 +71,7 @@ public class Message {
         if (!this.afterDarkAPI.findUser(chatId))
             this.afterDarkAPI.registerNewUser(chatId, name);
 
-        String textToSend = "Здравствуйте,  " + name + ", рады вас видить в нашем интернет магазине.\n";
+        String textToSend = "Здравствуйте,  " + name + ", рады видеть Вас в нашем интернет магазине..\n";
         textToSend += "Чтобы посмотреть команды бота, выполните команду /help.";
 
         // ReplyKeyboardMarkup keyboardMarkup =
@@ -107,7 +107,7 @@ public class Message {
      */
     public SendMessage addInBasketMessage(long chatId, String candleId) {
         this.afterDarkAPI.addCandleInBasket(chatId, candleId);
-        String textToSend = "Вы добавили новую свечку)";
+        String textToSend = "Вы добавили новую свечу!";
         return setMessage(chatId, textToSend);
     }
 

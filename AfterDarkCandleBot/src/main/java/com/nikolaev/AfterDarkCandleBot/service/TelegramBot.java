@@ -141,7 +141,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void addColorInCandle(long chatId, String[] parts) {
         String data = parts[1];
         setColor(chatId, Long.valueOf(data));
-        setCandle(chatId);
+        getAllWick(chatId);;
     }
 
     private void previousColorInCustomCandle(long chatId, int messageId) {
@@ -161,7 +161,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void addWickInCandle(long chatId, String[] parts) {
         String data = parts[1];
         setWick(chatId, Long.valueOf(data));
-        getAllColor(chatId);
+        getAllSmell(chatId);
     }
 
     private void previousWickInCustomCandle(long chatId, int messageId) {
@@ -181,7 +181,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void addSmellInCandle(long chatId, String[] parts) {
         String data = parts[1];
         setSmell(chatId, Long.valueOf(data));
-        getAllWick(chatId);
+        setCandle(chatId);
     }
 
     private void previousSmellInCustomCandle(long chatId, int messageId) {
@@ -201,7 +201,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void addShapeInCandle(long chatId, String[] parts) {
         String data = parts[1];
         setShape(chatId, Long.valueOf(data));
-        getAllSmell(chatId);
+        getAllColor(chatId);
     }
 
     private void previousShapeInCustomCandle(long chatId, int messageId) {
