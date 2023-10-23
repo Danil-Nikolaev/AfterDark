@@ -8,15 +8,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.nikolaev.AfterDarkAPI.models.Order;
+import com.nikolaev.AfterDarkAPI.models.User;
 import com.nikolaev.AfterDarkAPI.repositories.OrderRepository;
 
 @Service
 public class OrderService {
 
     private OrderRepository orderRepository;
+    private UserService userService;
 
-    public OrderService(@Autowired OrderRepository orderRepository) {
+    public OrderService(@Autowired OrderRepository orderRepository, @Autowired UserService userService) {
         this.orderRepository = orderRepository;
+        this.userService = userService;
     }
 
     public List<Order> index() {
@@ -56,6 +59,11 @@ public class OrderService {
 
     public void delete(long id) {
         orderRepository.deleteById(id);
+    }
+
+    public List<Order> findAllByUser(String login) {
+        User user = userService.findByLogin(login);
+        return orderRepository.findByUser(user);
     }
 
 }
