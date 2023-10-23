@@ -1,5 +1,6 @@
 package com.nikolaev.AfterDarkCandleBot.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +8,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.nikolaev.AfterDarkCandleBot.config.BotConfig;
@@ -18,6 +23,13 @@ import com.nikolaev.AfterDarkCandleBot.config.BotConfig;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final String startCommandMessage = "/start";
+    private final String basketCommandMessage = "/basket";
+    private final String customCommandMessage = "/custom";
+    private final String orderCommandMessage = "/order";
+    private final String ordersCommandMessage = "/orders";
+    private final String catalogCommandMessage = "/catalog";
+    private final String helpCommandMessage = "/help";
+
     private final String catalogMessage = "Каталог";
     private final String myBasketMessage = "Ваша корзина";
     private final String mainPageMessage = "На главную страницу";
@@ -43,22 +55,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (botState != null) {
                 switch (botState) {
-                    case WAITING_SHAPE:
-                        setShape(chatId, Long.valueOf(messageText));
-                        getAllSmell(chatId);
-                        break;
-                    case WAITING_SMELL:
-                        setSmell(chatId, Long.valueOf(messageText));
-                        getAllColor(chatId);
-                        break;
-                    case WAITING_COLOR:
-                        setColor(chatId, Long.valueOf(messageText));
-                        getAllWick(chatId);
-                        break;
-                    case WAITING_WICK:
-                        setWick(chatId, Long.valueOf(messageText));
-                        setCandle(chatId);
-                        break;
 
                     case WAITING_NAME:
                         setName(chatId, messageText);
@@ -69,7 +65,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                         setPhone(chatId, messageText);
                         getAddress(chatId);
                         break;
-
                     case WAITING_ADDRESS:
                         setAddress(chatId, messageText);
                         createNewOrder(chatId);
@@ -78,18 +73,24 @@ public class TelegramBot extends TelegramLongPollingBot {
                         break;
                 }
             } else {
-                switch(messageText) {
+                switch (messageText) {
                     case startCommandMessage -> startMessage(chatId, update.getMessage().getChat().getFirstName());
+                    case catalogCommandMessage -> catalogMessage(chatId);
+                    case basketCommandMessage -> candlesInBasket(chatId);
+                    case customCommandMessage -> makeCustomCandle(chatId);
+                    case orderCommandMessage -> startSetOrder(chatId);
+                    case helpCommandMessage -> helpCommand(chatId);
+                    case ordersCommandMessage -> ordersCommand(chatId);
+
                     case catalogMessage -> catalogMessage(chatId);
                     case myBasketMessage -> candlesInBasket(chatId);
                     case mainPageMessage -> startMessage(chatId, update.getMessage().getChat().getFirstName());
                     case makeCustomCandleMessage -> makeCustomCandle(chatId);
                     case createNewOrderMessage -> startSetOrder(chatId);
 
-                    default -> defaultMessage(chatId, "not");
+                    default -> defaultMessage(chatId, "Выберите одну из команд.");
                 }
             }
-
 
         } else if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -102,10 +103,185 @@ public class TelegramBot extends TelegramLongPollingBot {
             switch (button) {
                 case "addCandleInBasket" -> addInBasket(chatId, parts);
                 case "deleteCandleFromBasket" -> deleteCandleFromBasket(chatId, parts);
+                case "nextCandleInCatalog" -> nextCandleInCatalog(chatId, callbackQuery.getMessage().getMessageId());
+                case "previousCandleInCatalog" ->
+                    previousCandleInCatalog(chatId, callbackQuery.getMessage().getMessageId());
+                case "nextShapeInCustomCandle" ->
+                    nextShapeInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "previousShapeInCustomCandle" ->
+                    previousShapeInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "addShapeInCandle" -> addShapeInCandle(chatId, parts);
+                case "nextSmellInCustomCandle" ->
+                    nextSmellInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "previousSmellInCustomCandle" ->
+                    previousSmellInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "addSmellInCandle" -> addSmellInCandle(chatId, parts);
+                case "nextWickInCustomCandle" ->
+                    nextWickInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "previousWickInCustomCandle" ->
+                    previousWickInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "addWickInCandle" -> addWickInCandle(chatId, parts);
+                case "nextColorInCustomCandle" ->
+                    nextColorInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "previousColorInCustomCandle" ->
+                    previousColorInCustomCandle(chatId, callbackQuery.getMessage().getMessageId());
+                case "addColorInCandle" -> addColorInCandle(chatId, parts);
             }
         }
     }
-    
+
+    public void registerCommands() {
+        List<BotCommand> commands = new ArrayList<>();
+
+        commands.add(new BotCommand("start", "Начать"));
+        commands.add(new BotCommand("basket", "Ваша корзина"));
+        commands.add(new BotCommand("catalog", "Каталог"));
+        commands.add(new BotCommand("custom", "Сделать кастомную свечу"));
+        commands.add(new BotCommand("order", "Оформить заказ"));
+        commands.add(new BotCommand("orders", "Посмотреть свои заказы"));
+        // commands.add(new BotCommand("settings", "Настройки"));
+        commands.add(new BotCommand("help", "Помощь"));
+
+        SetMyCommands setMyCommands = new SetMyCommands();
+        setMyCommands.setCommands(commands);
+
+        try {
+            execute(setMyCommands);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addColorInCandle(long chatId, String[] parts) {
+        String data = parts[1];
+        setColor(chatId, Long.valueOf(data));
+        setCandle(chatId);
+    }
+
+    private void previousColorInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.previousColorInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void nextColorInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.nextColorInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void addWickInCandle(long chatId, String[] parts) {
+        String data = parts[1];
+        setWick(chatId, Long.valueOf(data));
+        getAllColor(chatId);
+    }
+
+    private void previousWickInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.previousWickInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void nextWickInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.nextWickInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void addSmellInCandle(long chatId, String[] parts) {
+        String data = parts[1];
+        setSmell(chatId, Long.valueOf(data));
+        getAllWick(chatId);
+    }
+
+    private void previousSmellInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.previousSmellInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void nextSmellInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.nextSmellInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void addShapeInCandle(long chatId, String[] parts) {
+        String data = parts[1];
+        setShape(chatId, Long.valueOf(data));
+        getAllSmell(chatId);
+    }
+
+    private void previousShapeInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.previousShapeInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void nextShapeInCustomCandle(long chatId, int messageId) {
+        SendMessage message = this.message.nextShapeInCustomCandle(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void previousCandleInCatalog(long chatId, int messageId) {
+        SendMessage message = this.message.previousCandleInCatalog(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    private void nextCandleInCatalog(long chatId, int messageId) {
+        SendMessage message = this.message.nextCandleInCatalog(chatId);
+        EditMessageText editMessageText = convertSendMessageToEditMessageText(message, messageId);
+
+        sendMessage(editMessageText);
+    }
+
+    public static EditMessageText convertSendMessageToEditMessageText(SendMessage sendMessage, int messageId) {
+        EditMessageText editMessageText = new EditMessageText();
+
+        editMessageText.setChatId(sendMessage.getChatId());
+        editMessageText.setMessageId(messageId);
+        editMessageText.setText(sendMessage.getText());
+
+        if (sendMessage.getReplyMarkup() instanceof InlineKeyboardMarkup) {
+            editMessageText.setReplyMarkup((InlineKeyboardMarkup) sendMessage.getReplyMarkup());
+        }
+
+        return editMessageText;
+    }
+
+    private void helpCommand(long chatId) {
+        String textToSend = """
+                Команды:
+                /start - Запускает телеграм бота.
+                /help - Справочная информация о командах бота.
+                /basket - Посмотрите корзину, которую вы собрали.
+                /catalog - Показывает каталог стандартных свечей.
+                /custom - Создать свою собсвенную свечу.
+                /order - Офрмить заказ.
+                /orders - Посмотреть историю ваших заказов.
+                """;
+        SendMessage message = this.message.defualtMessage(chatId, textToSend);
+        sendMessage(message);
+    }
+
+    private void ordersCommand(long chatId) {
+        List<SendMessage> messages = this.message.findAllOrdersByUser(chatId);
+        for (SendMessage messageLocal : messages) {
+            sendMessage(messageLocal);
+        }
+    }
+
     private void createNewOrder(Long chatId) {
         this.botStateMap.put(chatId, null);
         SendMessage message = this.message.createNewOrder(chatId);
@@ -141,10 +317,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void startSetOrder(long chatId) {
         SendMessage message = this.message.startSetOrder(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_NAME);
+        String badMessage = "Пока что у вас";
+        String dontFindUser = "Для Начала выполните";
+        if (!message.getText().startsWith(badMessage) && !message.getText().startsWith(dontFindUser)) {
+            this.botStateMap.put(chatId, BotState.WAITING_NAME);
+        }
+
         sendMessage(message);
     }
-
 
     private void setCandle(long chatId) {
         this.botStateMap.put(chatId, null);
@@ -164,8 +344,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllWick(long chatId) {
         List<SendMessage> wicks = this.message.getAllWick(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_WICK);
-        for (SendMessage wick : wicks) sendMessage(wick);
+        // this.botStateMap.put(chatId, BotState.WAITING_WICK);
+        for (SendMessage wick : wicks)
+            sendMessage(wick);
     }
 
     private void setSmell(long chatId, long smellId) {
@@ -175,8 +356,9 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllColor(long chatId) {
         List<SendMessage> colors = this.message.getAllColor(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_COLOR);
-        for (SendMessage color : colors) sendMessage(color);
+        // this.botStateMap.put(chatId, BotState.WAITING_COLOR);
+        for (SendMessage color : colors)
+            sendMessage(color);
     }
 
     private void setShape(long chatId, long shapeId) {
@@ -186,14 +368,16 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllSmell(long chatId) {
         List<SendMessage> smells = this.message.getAllSmell(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_SMELL);
-        for (SendMessage smell : smells) sendMessage(smell);
+        // this.botStateMap.put(chatId, BotState.WAITING_SMELL);
+        for (SendMessage smell : smells)
+            sendMessage(smell);
     }
 
     private void makeCustomCandle(long chatId) {
-        List<SendMessage> shapes = this.message.makeCustomCandle(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_SHAPE);
-        for (SendMessage shape : shapes) sendMessage(shape);
+        List<SendMessage> shapes = this.message.getAllShape(chatId);
+        // this.botStateMap.put(chatId, BotState.WAITING_SHAPE);
+        for (SendMessage shape : shapes)
+            sendMessage(shape);
     }
 
     private void deleteCandleFromBasket(long chatId, String[] parts) {
@@ -203,7 +387,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void candlesInBasket(long chatId) {
         List<SendMessage> candles = this.message.listCandlesInBasket(chatId);
-        for(SendMessage candle : candles) sendMessage(candle);
+        for (SendMessage candle : candles)
+            sendMessage(candle);
     }
 
     private void addInBasket(long chatId, String[] parts) {
@@ -212,8 +397,8 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     private void catalogMessage(long chatId) {
-        List<SendMessage> candles = this.message.catalogMessage(chatId);
-        for (SendMessage sendMessage : candles) sendMessage(sendMessage); 
+        SendMessage candle = this.message.catalogMessage(chatId);
+        sendMessage(candle);
     }
 
     private void startMessage(long chatId, String name) {
@@ -235,6 +420,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    private void sendMessage(EditMessageText editMessageText) {
+        try {
+            execute(editMessageText);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public String getBotUsername() {
         return botConfig.getBotName();
@@ -244,5 +437,5 @@ public class TelegramBot extends TelegramLongPollingBot {
     public String getBotToken() {
         return botConfig.getToken();
     }
-    
+
 }

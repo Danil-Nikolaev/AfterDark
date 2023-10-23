@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
 public class AfterDarkAPI {
@@ -25,6 +26,15 @@ public class AfterDarkAPI {
     public AfterDarkAPI(@Autowired RestTemplate restTemplate, @Autowired ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+    }
+
+    public ArrayNode getAllOrdersByUser(long chatId) {
+        String url = mainUrlApi + "order/findByUser?login=" + String.valueOf(chatId);
+        ResponseEntity<ArrayNode> response = this.restTemplate.getForEntity(url, ArrayNode.class);
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return response.getBody();
+        }
+        return null;
     }
 
     /*
@@ -98,6 +108,18 @@ public class AfterDarkAPI {
         }
 
         return null;
+    }
+
+    public void deleteCandlesInBusket(long chatId) {
+        JsonNode user = findUserByLogin(chatId);
+        String id = String.valueOf(user.get("id"));
+
+        String url = mainUrlApi + "basket/" + id;
+
+        ObjectNode basket = (ObjectNode) findBasketById(Long.valueOf(id));
+        basket.set("candles", null);
+        this.restTemplate.put(url, basket, id);
+
     }
 
     /*

@@ -20,6 +20,7 @@ public class BotInializer {
     public void init() {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            telegramBot.registerCommands();
 
             telegramBotsApi.registerBot(telegramBot);
         } catch (TelegramApiException e) {
