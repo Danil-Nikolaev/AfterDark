@@ -71,7 +71,7 @@ public class Message {
         if (!this.afterDarkAPI.findUser(chatId))
             this.afterDarkAPI.registerNewUser(chatId, name);
 
-        String textToSend = "Здравствуйте,  " + name + ", рады видеть Вас в нашем интернет магазине..\n";
+        String textToSend = "Здравствуйте,  " + name + ", рады Вас видить в нашем интернет магазине.\n";
         textToSend += "Чтобы посмотреть команды бота, выполните команду /help.";
 
         // ReplyKeyboardMarkup keyboardMarkup =
@@ -454,16 +454,23 @@ public class Message {
     }
 
     private String setCandleMessage(JsonNode candle) {
+        Boolean custom = candle.get("custom").asBoolean();
         String name = candle.get("name").asText();
-        String description = candle.get("description").asText();
-        String quanity = candle.get("quanity").asText();
+        if (custom) {
+            name = "Ваша оригинальная свеча.";
+        }
         String price = candle.get("price").asText();
+        String wickName = candle.get("wick").get("name").asText();
+        String shapeName = candle.get("shape").get("name").asText();
+        String colorName = candle.get("colorShape").get("name").asText();
         String smellName = candle.get("smell").get("name").asText();
-        String textToSend = "Название свечи: " + name +
-                "\nОписание: " + description +
-                "\nКоличество свеч: " + quanity +
-                "\nЦена: " + price +
-                "\nАромат: " + smellName;
+        String textToSend = 
+                "Название: " + name + 
+                "\nФорма: " + shapeName +
+                "\nЦвет: " + colorName +
+                "\nФитиль: " + wickName +
+                "\nАромат: " + smellName +
+                "\nЦена: " + price;
         return textToSend;
     }
 
