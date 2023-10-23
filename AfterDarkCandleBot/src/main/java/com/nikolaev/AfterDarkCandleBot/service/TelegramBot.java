@@ -30,12 +30,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String catalogCommandMessage = "/catalog";
     private final String helpCommandMessage = "/help";
 
-    private final String catalogMessage = "Каталог";
-    private final String myBasketMessage = "Ваша корзина";
-    private final String mainPageMessage = "На главную страницу";
-    private final String makeCustomCandleMessage = "Сделать кастомную свечу";
-    private final String createNewOrderMessage = "Оформить заказ";
-
     private final BotConfig botConfig;
     private Message message;
     private Map<Long, BotState> botStateMap;
@@ -81,13 +75,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case orderCommandMessage -> startSetOrder(chatId);
                     case helpCommandMessage -> helpCommand(chatId);
                     case ordersCommandMessage -> ordersCommand(chatId);
-
-                    case catalogMessage -> catalogMessage(chatId);
-                    case myBasketMessage -> candlesInBasket(chatId);
-                    case mainPageMessage -> startMessage(chatId, update.getMessage().getChat().getFirstName());
-                    case makeCustomCandleMessage -> makeCustomCandle(chatId);
-                    case createNewOrderMessage -> startSetOrder(chatId);
-
                     default -> defaultMessage(chatId, "Выберите одну из команд.");
                 }
             }
