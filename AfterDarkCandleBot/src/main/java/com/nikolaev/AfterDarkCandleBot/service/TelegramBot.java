@@ -126,7 +126,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         commands.add(new BotCommand("custom", "Сделать кастомную свечу"));
         commands.add(new BotCommand("order", "Оформить заказ"));
         commands.add(new BotCommand("orders", "Посмотреть свои заказы"));
-        // commands.add(new BotCommand("settings", "Настройки"));
         commands.add(new BotCommand("help", "Помощь"));
 
         SetMyCommands setMyCommands = new SetMyCommands();
