@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +23,6 @@ public class Message {
     private AfterDarkAPI afterDarkAPI;
     private ObjectMapper objectMapper;
     private InlineKeyboardFactory inlineKeyboardFactory;
-    private ReplyKeyboardFactory replyKeyboardFactory;
     private ListIterator<JsonNode> iterator;
     private boolean nextButton = false;
     private boolean previousButton = false;
@@ -32,12 +30,10 @@ public class Message {
     private Map<Long, Map<String, String>> orderMaps;
 
     public Message(@Autowired AfterDarkAPI afterDarkAPI, @Autowired ObjectMapper objectMapper,
-            @Autowired ReplyKeyboardFactory replyKeyboardFactory,
             @Autowired InlineKeyboardFactory inlineKeyboardFactory) {
         this.afterDarkAPI = afterDarkAPI;
         this.objectMapper = objectMapper;
         this.inlineKeyboardFactory = inlineKeyboardFactory;
-        this.replyKeyboardFactory = replyKeyboardFactory;
         this.candleMaps = new HashMap<>();
         this.orderMaps = new HashMap<>();
     }
@@ -541,14 +537,6 @@ public class Message {
     }
 
     private SendMessage setMessage(long chatId, String textToSend, InlineKeyboardMarkup keyboardMarkup) {
-        SendMessage message = new SendMessage();
-        message.setChatId(chatId);
-        message.setText(textToSend);
-        message.setReplyMarkup(keyboardMarkup);
-        return message;
-    }
-
-    private SendMessage setMessage(long chatId, String textToSend, ReplyKeyboardMarkup keyboardMarkup) {
         SendMessage message = new SendMessage();
         message.setChatId(chatId);
         message.setText(textToSend);
