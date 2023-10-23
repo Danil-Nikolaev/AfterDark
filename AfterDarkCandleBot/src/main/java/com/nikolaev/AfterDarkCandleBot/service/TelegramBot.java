@@ -330,7 +330,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllWick(long chatId) {
         List<SendMessage> wicks = this.message.getAllWick(chatId);
-        // this.botStateMap.put(chatId, BotState.WAITING_WICK);
         for (SendMessage wick : wicks)
             sendMessage(wick);
     }
@@ -342,7 +341,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllColor(long chatId) {
         List<SendMessage> colors = this.message.getAllColor(chatId);
-        // this.botStateMap.put(chatId, BotState.WAITING_COLOR);
         for (SendMessage color : colors)
             sendMessage(color);
     }
@@ -354,14 +352,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     private void getAllSmell(long chatId) {
         List<SendMessage> smells = this.message.getAllSmell(chatId);
-        // this.botStateMap.put(chatId, BotState.WAITING_SMELL);
         for (SendMessage smell : smells)
             sendMessage(smell);
     }
 
     private void makeCustomCandle(long chatId) {
         List<SendMessage> shapes = this.message.getAllShape(chatId);
-        // this.botStateMap.put(chatId, BotState.WAITING_SHAPE);
         for (SendMessage shape : shapes)
             sendMessage(shape);
     }
