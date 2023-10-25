@@ -74,9 +74,6 @@ public class Message {
         String textToSend = "Здравствуйте,  " + name + ", рады Вас видить в нашем интернет магазине.\n";
         textToSend += "Чтобы посмотреть команды бота, выполните команду /help.";
 
-        // ReplyKeyboardMarkup keyboardMarkup =
-        // this.replyKeyboardFactory.mainKeyboardMarkup();
-
         return setMessage(chatId, textToSend);
     }
 
@@ -380,7 +377,6 @@ public class Message {
         Map<String, String> orderMap = this.orderMaps.get(chatId);
         String numberPhone = orderMap.get("phone");
         String address = orderMap.get("address");
-        // String name = orderMap.get("name");
 
         ObjectNode order = objectMapper.createObjectNode();
 
@@ -423,11 +419,6 @@ public class Message {
 
             result.add(setMessage(chatId, textToSend, markupInline));
         }
-        // ReplyKeyboardMarkup keyboardMarkup =
-        // this.replyKeyboardFactory.basketKeyboardMarkup();
-
-        // String textToSend = "Хотите ли оформить заказ?";
-        // result.add(setMessage(chatId, textToSend));
         return result;
     }
 
