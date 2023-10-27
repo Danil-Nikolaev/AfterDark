@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Service
-public class Message {
+public class MessageService {
 
     private AfterDarkAPI afterDarkAPI;
     private ObjectMapper objectMapper;
@@ -29,7 +29,7 @@ public class Message {
     private Map<Long, Map<String, Long>> candleMaps;
     private Map<Long, Map<String, String>> orderMaps;
 
-    public Message(@Autowired AfterDarkAPI afterDarkAPI, @Autowired ObjectMapper objectMapper,
+    public MessageService(@Autowired AfterDarkAPI afterDarkAPI, @Autowired ObjectMapper objectMapper,
             @Autowired InlineKeyboardFactory inlineKeyboardFactory) {
         this.afterDarkAPI = afterDarkAPI;
         this.objectMapper = objectMapper;

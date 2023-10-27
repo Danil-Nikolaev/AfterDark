@@ -1,4 +1,4 @@
-package com.nikolaev.AfterDarkCandleBot.messages;
+package com.nikolaev.AfterDarkCandleBot.messages.interfaces;
 
 import java.util.List;
 

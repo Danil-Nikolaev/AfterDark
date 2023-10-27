@@ -3,11 +3,14 @@ package com.nikolaev.AfterDarkCandleBot.messages;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import com.nikolaev.AfterDarkCandleBot.messages.interfaces.Message;
 import com.nikolaev.AfterDarkCandleBot.service.AfterDarkAPI;
 
+@Component
 public class StartCommandMessage implements Message {
 
     @Autowired
