@@ -64,6 +64,7 @@ public class CandleService {
         return this.candleRepository.findByChatId(chatId).orElse(null);
     }
 
+    @Transactional
     public Candle save(long chatId, Candle candle) {
         return this.candleRepository.save(candle);
     }

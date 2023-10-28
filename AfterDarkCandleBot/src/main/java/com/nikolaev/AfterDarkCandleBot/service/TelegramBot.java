@@ -18,12 +18,17 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.nikolaev.AfterDarkCandleBot.config.BotConfig;
+import com.nikolaev.AfterDarkCandleBot.messages.AddressMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.BasketMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.CatalogMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.ColorMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.CustomCandleMessage;
+import com.nikolaev.AfterDarkCandleBot.messages.DefaultMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.HelpCommandMessage;
+import com.nikolaev.AfterDarkCandleBot.messages.NameMessage;
+import com.nikolaev.AfterDarkCandleBot.messages.OrderMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.OrdersMessage;
+import com.nikolaev.AfterDarkCandleBot.messages.PhoneMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.ShapeMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.SmellMessage;
 import com.nikolaev.AfterDarkCandleBot.messages.StartCommandMessage;
@@ -45,7 +50,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String helpCommandMessageString = "/help";
 
     private final BotConfig botConfig;
-    private MessageService message;
     private Map<Long, BotState> botStateMap = new HashMap<>();
 
     private StartCommandMessage startCommandMessage;
@@ -58,14 +62,20 @@ public class TelegramBot extends TelegramLongPollingBot {
     private ColorMessage colorMessage;
     private WickMessage wickMessage;
     private CustomCandleMessage customCandleMessage;
+    private DefaultMessage defaultMessage;
+    private NameMessage nameMessage;
+    private PhoneMessage phoneMessage;
+    private AddressMessage addressMessage;
+    private OrderMessage orderMessage;
 
     @Autowired
-    public TelegramBot(BotConfig botConfig, MessageService message,
+    public TelegramBot(BotConfig botConfig,
             StartCommandMessage startCommandMessage, HelpCommandMessage helpCommandMessage,
             OrdersMessage ordersMessage, CatalogMessage catalogMessage, BasketMessage basketMessage,
-            ShapeMessage shapeMessage, SmellMessage smellMessage, ColorMessage colorMessage, WickMessage wickMessage, CustomCandleMessage customCandleMessage) {
+            ShapeMessage shapeMessage, SmellMessage smellMessage, ColorMessage colorMessage, WickMessage wickMessage, 
+            CustomCandleMessage customCandleMessage, DefaultMessage defaultMessage, 
+            NameMessage nameMessage, PhoneMessage phoneMessage, AddressMessage addressMessage, OrderMessage orderMessage) {
         this.botConfig = botConfig;
-        this.message = message;
         this.startCommandMessage = startCommandMessage;
         this.helpCommandMessage = helpCommandMessage;
         this.ordersMessage = ordersMessage;
@@ -75,7 +85,12 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.colorMessage = colorMessage;
         this.smellMessage = smellMessage;
         this.wickMessage = wickMessage;
+        this.defaultMessage = defaultMessage;
         this.customCandleMessage = customCandleMessage;
+        this.nameMessage = nameMessage;
+        this.phoneMessage = phoneMessage;
+        this.addressMessage = addressMessage;
+        this.orderMessage = orderMessage;
         this.botStateMap = new HashMap<>();
     }
 
@@ -90,17 +105,20 @@ public class TelegramBot extends TelegramLongPollingBot {
                 switch (botState) {
 
                     case WAITING_NAME:
-                        setName(chatId, messageText);
-                        getPhone(chatId);
+                        add(nameMessage, update);
+                        sendMessage(phoneMessage, update);
+                        this.botStateMap.put(chatId, BotState.WAITING_PHONE);
                         break;
 
                     case WAITING_PHONE:
-                        setPhone(chatId, messageText);
-                        getAddress(chatId);
+                        add(phoneMessage, update);
+                        sendMessage(addressMessage, update);
+                        this.botStateMap.put(chatId, BotState.WAITING_ADDRESS);
                         break;
                     case WAITING_ADDRESS:
-                        setAddress(chatId, messageText);
-                        createNewOrder(chatId);
+                        add(addressMessage, update);
+                        add(orderMessage, update);
+                        this.botStateMap.put(chatId, null);
 
                     default:
                         break;
@@ -111,10 +129,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                     case catalogCommandMessage -> sendMessage(catalogMessage, update);
                     case basketCommandMessage -> sendMessage(basketMessage, update);
                     case customCommandMessage -> sendMessage(shapeMessage, update);
-                    case orderCommandMessage -> startSetOrder(chatId);
+                    case orderCommandMessage -> startSetOrder(update);
                     case helpCommandMessageString -> sendMessage(helpCommandMessage, update);
                     case ordersCommandMessage -> sendMessage(ordersMessage, update);
-                    default -> defaultMessage(chatId, "Выберите одну из команд.");
+                    default -> sendMessage(defaultMessage, update);
                 }
             }
 
@@ -226,52 +244,16 @@ public class TelegramBot extends TelegramLongPollingBot {
         return editMessageText;
     }
 
-    private void createNewOrder(Long chatId) {
-        this.botStateMap.put(chatId, null);
-        SendMessage message = this.message.createNewOrder(chatId);
-        sendMessage(message);
-    }
-
-    private void setAddress(long chatId, String address) {
-        SendMessage message = this.message.setAddress(chatId, address);
-        sendMessage(message);
-    }
-
-    private void getAddress(long chatId) {
-        SendMessage message = this.message.getAddress(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_ADDRESS);
-        sendMessage(message);
-    }
-
-    private void setPhone(long chatId, String phone) {
-        SendMessage message = this.message.setPhone(chatId, phone);
-        sendMessage(message);
-    }
-
-    private void getPhone(long chatId) {
-        SendMessage message = this.message.getPhone(chatId);
-        this.botStateMap.put(chatId, BotState.WAITING_PHONE);
-        sendMessage(message);
-    }
-
-    private void setName(long chatId, String name) {
-        SendMessage message = this.message.setName(chatId, name);
-        sendMessage(message);
-    }
-
-    private void startSetOrder(long chatId) {
-        SendMessage message = this.message.startSetOrder(chatId);
+    private void startSetOrder(Update update) {
+        long chatId = update.getMessage().getChatId();
+        List<SendMessage> messages = this.nameMessage.setMessage(update);
+        SendMessage message = messages.get(0);
         String badMessage = "Пока что у вас";
         String dontFindUser = "Для Начала выполните";
         if (!message.getText().startsWith(badMessage) && !message.getText().startsWith(dontFindUser)) {
             this.botStateMap.put(chatId, BotState.WAITING_NAME);
         }
 
-        sendMessage(message);
-    }
-
-    private void defaultMessage(long chatId, String textToSend) {
-        SendMessage message = this.message.defualtMessage(chatId, textToSend);
         sendMessage(message);
     }
 
